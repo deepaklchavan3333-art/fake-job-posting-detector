@@ -2,6 +2,8 @@
 
 Clearhire is a React and Flask job-posting risk screening app. It combines a TF-IDF text model with structured job-posting fields, returns an estimated fake-post probability and confidence, and can save account-owned prediction history in SQLite. The interface checks pasted text, OCR text from an uploaded poster, or a public job-post URL. The curated listing cards are removed; live feed API routes remain available for integrations.
 
+**Live frontend:** [fake-job-posting-detectorr.netlify.app](https://fake-job-posting-detectorr.netlify.app/)
+
 ## Project layout
 
 - `frontend/` — React + Vite user interface
@@ -32,16 +34,15 @@ npm run dev
 
 Open the Vite URL (normally `http://localhost:5173`). Vite proxies `/api` to Flask at `http://127.0.0.1:5000`. To change the backend URL, edit `frontend/vite.config.js`.
 
-## Deploy the frontend to Netlify and the API to Render
+## Deployment
 
-Netlify publishes the Vite frontend as a static site; it does not run this Flask app as part of the site. Deploy the Flask backend as a separate Render web service, then let Netlify proxy `/api/*` requests to it.
+The React frontend is deployed to Netlify, and the Flask API runs as a separate Render web service. Netlify proxies `/api/*` requests to Render through `netlify.toml`.
 
-1. Push this project to a GitHub repository. Keep `backend/models/fake_job_model.joblib` in the repo because Render needs it to serve predictions.
-2. On Render, create **New → Web Service** from that repository. Set **Root Directory** to `backend`, **Build Command** to `pip install -r requirements.txt`, and **Start Command** to `gunicorn app:app --bind 0.0.0.0:$PORT`.
-3. Set Render environment variables: `FLASK_SECRET_KEY` to a long random secret and `SESSION_COOKIE_SECURE` to `true`. If prediction history must survive restarts/deploys, attach persistent storage and set `DATABASE_PATH` to a file under its mount path, such as `/var/data/clearhire.sqlite3`. Render's default service filesystem is ephemeral.
-4. After Render finishes deploying, copy the service URL (for example, `https://clearhire-api.onrender.com`). In the repository's `netlify.toml`, replace `REPLACE-WITH-YOUR-RENDER-SERVICE.onrender.com` in the `/api/*` redirect with that host. Commit and push the change.
-5. In Netlify, choose **Add new project → Import an existing project**, connect the GitHub repo, and deploy. The checked-in `netlify.toml` sets the base directory to `frontend`, build command to `npm run build`, publish directory to `dist`, and proxies the API to Render. The proxy target must be replaced before the live app's API calls will work.
-6. Check `https://YOUR-SITE.netlify.app/api/health`; it should return JSON with `"model_ready": true`. Then test registration and a poster/text/URL check on the site.
+1. Keep `backend/models/fake_job_model.joblib` in the repository because Render needs it to serve predictions.
+2. The Render service uses root directory `backend`, build command `pip install -r requirements.txt`, and start command `gunicorn app:app --bind 0.0.0.0:$PORT`.
+3. Set Render environment variables `FLASK_SECRET_KEY` to a long random secret and `SESSION_COOKIE_SECURE` to `true`. Render's default filesystem is ephemeral; use persistent storage and set `DATABASE_PATH` if prediction history must survive restarts.
+4. `netlify.toml` sets the frontend base directory to `frontend`, build command to `npm run build`, publish directory to `dist`, and proxies API requests to `https://fake-job-posting-detector-fnd6.onrender.com`.
+5. Check [the API health endpoint](https://fake-job-posting-detectorr.netlify.app/api/health); it should return JSON with `"model_ready": true`. Then test registration and a poster, text, or URL check on the site.
 
 On Render's free web service plan, local SQLite files are not durable. Use a paid service with a persistent disk for this SQLite setup, or migrate the database layer to managed Postgres for a more durable deployment. See [Render's disk documentation](https://render.com/docs/disks).
 
