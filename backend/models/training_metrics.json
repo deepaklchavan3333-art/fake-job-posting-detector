@@ -1,0 +1,123 @@
+{
+  "dataset": "fake_job_postings.csv",
+  "dataset_rows": 17880,
+  "class_counts": {
+    "REAL": 17014,
+    "FAKE": 866
+  },
+  "selection_metric": "fake-class F1 on stratified 20% holdout",
+  "holdout_results": [
+    {
+      "accuracy": 0.9743,
+      "fake_precision": 0.668,
+      "fake_recall": 0.9306,
+      "fake_f1": 0.7778,
+      "confusion_matrix_labels": [
+        "REAL",
+        "FAKE"
+      ],
+      "confusion_matrix": [
+        [
+          3323,
+          80
+        ],
+        [
+          12,
+          161
+        ]
+      ],
+      "model": "Logistic Regression"
+    },
+    {
+      "accuracy": 0.6516,
+      "fake_precision": 0.0901,
+      "fake_recall": 0.6821,
+      "fake_f1": 0.1592,
+      "confusion_matrix_labels": [
+        "REAL",
+        "FAKE"
+      ],
+      "confusion_matrix": [
+        [
+          2212,
+          1191
+        ],
+        [
+          55,
+          118
+        ]
+      ],
+      "model": "Multinomial Naive Bayes"
+    },
+    {
+      "accuracy": 0.9516,
+      "fake_precision": 0.0,
+      "fake_recall": 0.0,
+      "fake_f1": 0.0,
+      "confusion_matrix_labels": [
+        "REAL",
+        "FAKE"
+      ],
+      "confusion_matrix": [
+        [
+          3403,
+          0
+        ],
+        [
+          173,
+          0
+        ]
+      ],
+      "model": "Calibrated Linear SVM"
+    }
+  ],
+  "selected_model": "Logistic Regression",
+  "selected_holdout_metrics": {
+    "accuracy": 0.9743,
+    "fake_precision": 0.668,
+    "fake_recall": 0.9306,
+    "fake_f1": 0.7778,
+    "confusion_matrix_labels": [
+      "REAL",
+      "FAKE"
+    ],
+    "confusion_matrix": [
+      [
+        3323,
+        80
+      ],
+      [
+        12,
+        161
+      ]
+    ],
+    "model": "Logistic Regression"
+  },
+  "classification_report": {
+    "REAL": {
+      "precision": 0.9964017991004498,
+      "recall": 0.9764913311783721,
+      "f1-score": 0.9863460967646186,
+      "support": 3403.0
+    },
+    "FAKE": {
+      "precision": 0.6680497925311203,
+      "recall": 0.930635838150289,
+      "f1-score": 0.7777777777777778,
+      "support": 173.0
+    },
+    "accuracy": 0.9742729306487695,
+    "macro avg": {
+      "precision": 0.832225795815785,
+      "recall": 0.9535635846643306,
+      "f1-score": 0.8820619372711982,
+      "support": 3576.0
+    },
+    "weighted avg": {
+      "precision": 0.9805167607513184,
+      "recall": 0.9742729306487695,
+      "f1-score": 0.9762559627644164,
+      "support": 3576.0
+    }
+  }
+}
